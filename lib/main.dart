@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'services/routers/router_provider.dart';
-import 'services/themes/providers/theme_mode_provider.dart';
-import 'services/themes/helpers/dark_mode/dark_mode_helper.dart';
-import 'services/themes/helpers/light_mode/light_mode_helper.dart';
-import 'services/localization/providers/localization_provider.dart';
-import 'services/app_preference/providers/app_settings_provider.dart';
-
-import '/src/pages/splash/splash_scree.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_creator_app/services/app_preference/providers/app_settings_provider.dart';
+import 'package:movie_creator_app/services/localization/providers/localization_provider.dart';
+import 'package:movie_creator_app/services/routers/router_provider.dart';
+import 'package:movie_creator_app/services/themes/helpers/dark_mode/dark_mode_helper.dart';
+import 'package:movie_creator_app/services/themes/helpers/light_mode/light_mode_helper.dart';
+import 'package:movie_creator_app/services/themes/providers/theme_mode_provider.dart';
+import 'package:movie_creator_app/src/pages/splash/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

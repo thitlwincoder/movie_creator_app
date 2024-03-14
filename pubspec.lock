@@ -286,14 +286,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_lints:
-    dependency: "direct dev"
-    description:
-      name: flutter_lints
-      sha256: e2a421b7e59244faef694ba7b30562e489c2b489866e505074eb005cd7060db7
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -317,8 +309,16 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  freezed:
+    dependency: "direct dev"
+    description:
+      name: freezed
+      sha256: "57247f692f35f068cae297549a46a9a097100685c6780fe67177503eea5ed4e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.7"
   freezed_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: freezed_annotation
       sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
@@ -454,13 +454,21 @@ packages:
     source: hosted
     version: "0.6.7"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
+  json_serializable:
+    dependency: "direct dev"
+    description:
+      name: json_serializable
+      sha256: aa1f5a8912615733e0fdc7a02af03308933c93235bdc8d50d0b0c8a8ccb0b969
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.7.1"
   leak_tracker:
     dependency: transitive
     description:
@@ -485,14 +493,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      sha256: cbf8d4b858bb0134ef3ef87841abdf8d63bfc255c266b7bf6b39daa1085c4290
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   logging:
     dependency: transitive
     description:
@@ -954,6 +954,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  very_good_analysis:
+    dependency: "direct dev"
+    description:
+      name: very_good_analysis
+      sha256: "9ae7f3a3bd5764fb021b335ca28a34f040cd0ab6eec00a1b213b445dae58a4b8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   vm_service:
     dependency: transitive
     description:

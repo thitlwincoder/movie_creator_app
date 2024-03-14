@@ -27,20 +27,16 @@ const AppPreferencesSchema = CollectionSchema(
       name: r'fontFamily',
       type: IsarType.string,
     ),
-    r'isDarkMode': PropertySchema(
-      id: 2,
-      name: r'isDarkMode',
-      type: IsarType.bool,
-    ),
-    r'isSystemThemeMode': PropertySchema(
-      id: 3,
-      name: r'isSystemThemeMode',
-      type: IsarType.bool,
-    ),
     r'language': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'language',
       type: IsarType.string,
+    ),
+    r'themeMode': PropertySchema(
+      id: 3,
+      name: r'themeMode',
+      type: IsarType.byte,
+      enumMap: _AppPreferencesthemeModeEnumValueMap,
     )
   },
   estimateSize: _appPreferencesEstimateSize,
@@ -82,9 +78,8 @@ void _appPreferencesSerialize(
 ) {
   writer.writeString(offsets[0], object.colorSchemeSeed);
   writer.writeString(offsets[1], object.fontFamily);
-  writer.writeBool(offsets[2], object.isDarkMode);
-  writer.writeBool(offsets[3], object.isSystemThemeMode);
-  writer.writeString(offsets[4], object.language);
+  writer.writeString(offsets[2], object.language);
+  writer.writeByte(offsets[3], object.themeMode.index);
 }
 
 AppPreferences _appPreferencesDeserialize(
@@ -97,9 +92,10 @@ AppPreferences _appPreferencesDeserialize(
   object.colorSchemeSeed = reader.readString(offsets[0]);
   object.fontFamily = reader.readStringOrNull(offsets[1]);
   object.id = id;
-  object.isDarkMode = reader.readBool(offsets[2]);
-  object.isSystemThemeMode = reader.readBool(offsets[3]);
-  object.language = reader.readString(offsets[4]);
+  object.language = reader.readString(offsets[2]);
+  object.themeMode =
+      _AppPreferencesthemeModeValueEnumMap[reader.readByteOrNull(offsets[3])] ??
+          ThemeMode.system;
   return object;
 }
 
@@ -115,15 +111,26 @@ P _appPreferencesDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
-      return (reader.readBool(offset)) as P;
-    case 4:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (_AppPreferencesthemeModeValueEnumMap[
+              reader.readByteOrNull(offset)] ??
+          ThemeMode.system) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _AppPreferencesthemeModeEnumValueMap = {
+  'system': 0,
+  'light': 1,
+  'dark': 2,
+};
+const _AppPreferencesthemeModeValueEnumMap = {
+  0: ThemeMode.system,
+  1: ThemeMode.light,
+  2: ThemeMode.dark,
+};
 
 Id _appPreferencesGetId(AppPreferences object) {
   return object.id;
@@ -567,26 +574,6 @@ extension AppPreferencesQueryFilter
   }
 
   QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
-      isDarkModeEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isDarkMode',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
-      isSystemThemeModeEqualTo(bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isSystemThemeMode',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
       languageEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -721,6 +708,62 @@ extension AppPreferencesQueryFilter
       ));
     });
   }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
+      themeModeEqualTo(ThemeMode value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'themeMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
+      themeModeGreaterThan(
+    ThemeMode value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'themeMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
+      themeModeLessThan(
+    ThemeMode value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'themeMode',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterFilterCondition>
+      themeModeBetween(
+    ThemeMode lower,
+    ThemeMode upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'themeMode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension AppPreferencesQueryObject
@@ -759,34 +802,6 @@ extension AppPreferencesQuerySortBy
     });
   }
 
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      sortByIsDarkMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      sortByIsDarkModeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      sortByIsSystemThemeMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isSystemThemeMode', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      sortByIsSystemThemeModeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isSystemThemeMode', Sort.desc);
-    });
-  }
-
   QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy> sortByLanguage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'language', Sort.asc);
@@ -797,6 +812,19 @@ extension AppPreferencesQuerySortBy
       sortByLanguageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'language', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy> sortByThemeMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'themeMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
+      sortByThemeModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'themeMode', Sort.desc);
     });
   }
 }
@@ -843,34 +871,6 @@ extension AppPreferencesQuerySortThenBy
     });
   }
 
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      thenByIsDarkMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      thenByIsDarkModeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isDarkMode', Sort.desc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      thenByIsSystemThemeMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isSystemThemeMode', Sort.asc);
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
-      thenByIsSystemThemeModeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isSystemThemeMode', Sort.desc);
-    });
-  }
-
   QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy> thenByLanguage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'language', Sort.asc);
@@ -881,6 +881,19 @@ extension AppPreferencesQuerySortThenBy
       thenByLanguageDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'language', Sort.desc);
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy> thenByThemeMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'themeMode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QAfterSortBy>
+      thenByThemeModeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'themeMode', Sort.desc);
     });
   }
 }
@@ -902,24 +915,17 @@ extension AppPreferencesQueryWhereDistinct
     });
   }
 
-  QueryBuilder<AppPreferences, AppPreferences, QDistinct>
-      distinctByIsDarkMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isDarkMode');
-    });
-  }
-
-  QueryBuilder<AppPreferences, AppPreferences, QDistinct>
-      distinctByIsSystemThemeMode() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isSystemThemeMode');
-    });
-  }
-
   QueryBuilder<AppPreferences, AppPreferences, QDistinct> distinctByLanguage(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'language', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<AppPreferences, AppPreferences, QDistinct>
+      distinctByThemeMode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'themeMode');
     });
   }
 }
@@ -945,22 +951,16 @@ extension AppPreferencesQueryProperty
     });
   }
 
-  QueryBuilder<AppPreferences, bool, QQueryOperations> isDarkModeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isDarkMode');
-    });
-  }
-
-  QueryBuilder<AppPreferences, bool, QQueryOperations>
-      isSystemThemeModeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isSystemThemeMode');
-    });
-  }
-
   QueryBuilder<AppPreferences, String, QQueryOperations> languageProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'language');
+    });
+  }
+
+  QueryBuilder<AppPreferences, ThemeMode, QQueryOperations>
+      themeModeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'themeMode');
     });
   }
 }

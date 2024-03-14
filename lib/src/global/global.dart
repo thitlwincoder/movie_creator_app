@@ -1,2 +1,1 @@
-export 'package/packages.dart';
-export 'extention/extention.dart';
+export 'extentions/extentions.dart';

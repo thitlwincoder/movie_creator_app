@@ -1,6 +1,5 @@
-import '../services/{{name.snakeCase()}}_service.dart';
-import '../../domain/models/{{name.snakeCase()}}_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 
 part '{{name.snakeCase()}}_provider.g.dart';
 

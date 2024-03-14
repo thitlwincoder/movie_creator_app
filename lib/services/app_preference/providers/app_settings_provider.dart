@@ -1,11 +1,10 @@
-import 'dart:ui' show Color;
+import 'package:flutter/material.dart';
+import 'package:movie_creator_app/services/app_preference/models/app_preference.dart';
+import 'package:movie_creator_app/services/local_storage/isar/constants/isar_constants.dart';
+import 'package:movie_creator_app/services/local_storage/isar/providers/isar_provider.dart';
+import 'package:movie_creator_app/services/riverpod/riverpod.dart';
+import 'package:movie_creator_app/services/themes/extention/color_extention.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '/services/riverpod/riverpod.dart';
-import '/services/app_preference/models/app_preference.dart';
-import '/services/local_storage/isar/constants/isar_constants.dart';
-import '/services/local_storage/isar/providers/isar_provider.dart';
-import '/services/themes/extention/color_extention.dart';
 
 part 'app_settings_provider.g.dart';
 
@@ -16,32 +15,6 @@ class AppSettings extends _$AppSettings {
     ProviderHelper.onInit('AppSettings', ref.formatHash);
     final appPreferences = await _getData();
     return appPreferences;
-  }
-
-  void updateDarkMode(bool isDarkMode) {
-    final appPreferences = state.value;
-    appPreferences?.isDarkMode = isDarkMode;
-    _update(appPreferences);
-  }
-
-  void toggleSystemTheme() {
-    final appPreferences = state.value;
-    if (appPreferences != null) {
-      appPreferences.isSystemThemeMode = !appPreferences.isSystemThemeMode;
-      appPreferences.isDarkMode =
-          appPreferences.isSystemThemeMode ? false : appPreferences.isDarkMode;
-      _update(appPreferences);
-    }
-  }
-
-  void toggleTheme() {
-    final appPreferences = state.value;
-    if (appPreferences != null) {
-      appPreferences.isSystemThemeMode = false;
-      appPreferences.isDarkMode = !appPreferences.isDarkMode;
-
-      _update(appPreferences);
-    }
   }
 
   void updateFontFamily(String? fontFamily) {
@@ -56,9 +29,9 @@ class AppSettings extends _$AppSettings {
     _update(appPreferences);
   }
 
-  void updateIsSystemThemeMode(bool isSystemThemeMode) {
+  void updateThemeMode(ThemeMode themeMode) {
     final appPreferences = state.value;
-    appPreferences?.isSystemThemeMode = isSystemThemeMode;
+    appPreferences?.themeMode = themeMode;
     _update(appPreferences);
   }
 
@@ -82,13 +55,10 @@ class AppSettings extends _$AppSettings {
   }
 
   Future<AppPreferences> _getData() async {
-    // Add a delay to show the splash screen
-
     final isar = await ref.read(isarServiceProvider.future);
     final appPreferences =
         await isar?.appPreferences.get(IsarConstantsCollections.appPreferences);
 
-    //! TODO: Remove this delay if you don't want to show the splash screen
     await Future.delayed(const Duration(milliseconds: 700));
 
     if (appPreferences != null) {

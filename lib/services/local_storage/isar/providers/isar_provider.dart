@@ -1,8 +1,7 @@
 import 'package:isar/isar.dart';
+import 'package:movie_creator_app/services/app_preference/models/app_preference.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '/services/app_preference/models/app_preference.dart';
 
 part 'isar_provider.g.dart';
 
@@ -16,7 +15,6 @@ class IsarService extends _$IsarService {
       return await Isar.open(
         [AppPreferencesSchema],
         directory: dir.path,
-        inspector: true,
       );
     }
     return Future.value(Isar.getInstance());
@@ -29,6 +27,6 @@ class IsarService extends _$IsarService {
 
   Future<void> cleanIsarDB() async {
     final isar = state.value;
-    await isar?.writeTxn(() => isar.clear());
+    await isar?.writeTxn(isar.clear);
   }
 }
